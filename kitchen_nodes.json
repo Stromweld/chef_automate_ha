@@ -1,0 +1,7 @@
+  {
+    "bastion": [""],
+    "chef_frontend": [""],
+    "automate_frontend": [""],
+    "postgres_backend": ["", "", ""],
+    "opensearch_backend": ["", "", ""]
+  }
