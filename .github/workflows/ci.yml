@@ -15,15 +15,15 @@ jobs:
   cookstylelint:
     uses: Stromweld/github-workflows/.github/workflows/cookstylelint.yml@main
 
-  integration:
-    runs-on: macos-latest
-    steps:
-      - name: Install software
-        run: brew install vagrant virtualbox chef-workstation
-      - name: Check out code
-        uses: actions/checkout@main
-      - name: Test-Kitchen
-        run: ./start_kitchen_test.sh
+#  integration:
+#    runs-on: macos-latest
+#    steps:
+#      - name: Install software
+#        run: brew install vagrant virtualbox chef-workstation
+#      - name: Check out code
+#        uses: actions/checkout@main
+#      - name: Test-Kitchen
+#        run: ./start_kitchen_test.sh
 
   check:
     if: always()
@@ -32,7 +32,7 @@ jobs:
       - yamllint
       - jsonlint
       - cookstylelint
-      - integration
+#      - integration
     runs-on: Ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed

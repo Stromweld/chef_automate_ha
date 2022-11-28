@@ -32,30 +32,30 @@ if [[ "$KITCHEN_LOCAL_YAML" == "kitchen.dokken.yml" ]]
 elif [[ "$VAGRANT_DEFAULT_PROVIDER" == "parallels" ]]
   then
     # Get external IPs
-    chef_frontend="$(prlctl exec $(cat ./.kitchen/kitchen-vagrant/chef-frontend-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
-    automate_frontend="$(prlctl exec $(cat ./.kitchen/kitchen-vagrant/automate-frontend-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
-    postgres_backend_1="$(prlctl exec $(cat ./.kitchen/kitchen-vagrant/postgres-backend-1-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
-    postgres_backend_2="$(prlctl exec $(cat ./.kitchen/kitchen-vagrant/postgres-backend-2-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
-    postgres_backend_3="$(prlctl exec $(cat ./.kitchen/kitchen-vagrant/postgres-backend-3-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
-    opensearch_backend_1="$(prlctl exec $(cat ./.kitchen/kitchen-vagrant/opensearch-backend-1-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
-    opensearch_backend_2="$(prlctl exec $(cat ./.kitchen/kitchen-vagrant/opensearch-backend-2-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
-    opensearch_backend_3="$(prlctl exec $(cat ./.kitchen/kitchen-vagrant/opensearch-backend-3-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
-    bastion="$(prlctl exec $(cat ./.kitchen/kitchen-vagrant/chef-frontend-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
+    chef_frontend="$(prlctl exec $(cat .kitchen/kitchen-vagrant/chef-frontend-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
+    automate_frontend="$(prlctl exec $(cat .kitchen/kitchen-vagrant/automate-frontend-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
+    postgres_backend_1="$(prlctl exec $(cat .kitchen/kitchen-vagrant/postgres-backend-1-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
+    postgres_backend_2="$(prlctl exec $(cat .kitchen/kitchen-vagrant/postgres-backend-2-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
+    postgres_backend_3="$(prlctl exec $(cat .kitchen/kitchen-vagrant/postgres-backend-3-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
+    opensearch_backend_1="$(prlctl exec $(cat .kitchen/kitchen-vagrant/opensearch-backend-1-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
+    opensearch_backend_2="$(prlctl exec $(cat .kitchen/kitchen-vagrant/opensearch-backend-2-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
+    opensearch_backend_3="$(prlctl exec $(cat .kitchen/kitchen-vagrant/opensearch-backend-3-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
+    bastion="$(prlctl exec $(cat .kitchen/kitchen-vagrant/chef-frontend-*/.vagrant/machines/default/parallels/id) ip -o -f inet address show eth0 | cut -d ' ' -f7 | cut -d '/' -f1)"
 else
   # Get external IPs
-  chef_frontend="$(VBoxManage guestproperty get $(cat ./.kitchen/kitchen-vagrant/chef-frontend-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
-  automate_frontend="$(VBoxManage guestproperty get $(cat ./.kitchen/kitchen-vagrant/automate-frontend-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
-  postgres_backend_1="$(VBoxManage guestproperty get $(cat ./.kitchen/kitchen-vagrant/postgres-backend-1-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
-  postgres_backend_2="$(VBoxManage guestproperty get $(cat ./.kitchen/kitchen-vagrant/postgres-backend-2-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
-  postgres_backend_3="$(VBoxManage guestproperty get $(cat ./.kitchen/kitchen-vagrant/postgres-backend-3-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
-  opensearch_backend_1="$(VBoxManage guestproperty get $(cat ./.kitchen/kitchen-vagrant/opensearch-backend-1-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
-  opensearch_backend_2="$(VBoxManage guestproperty get $(cat ./.kitchen/kitchen-vagrant/opensearch-backend-2-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
-  opensearch_backend_3="$(VBoxManage guestproperty get $(cat ./.kitchen/kitchen-vagrant/opensearch-backend-3-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
-  bastion="$(VBoxManage guestproperty get $(cat ./.kitchen/kitchen-vagrant/bastion-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
+  chef_frontend="$(VBoxManage guestproperty get $(cat .kitchen/kitchen-vagrant/chef-frontend-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
+  automate_frontend="$(VBoxManage guestproperty get $(cat .kitchen/kitchen-vagrant/automate-frontend-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
+  postgres_backend_1="$(VBoxManage guestproperty get $(cat .kitchen/kitchen-vagrant/postgres-backend-1-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
+  postgres_backend_2="$(VBoxManage guestproperty get $(cat .kitchen/kitchen-vagrant/postgres-backend-2-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
+  postgres_backend_3="$(VBoxManage guestproperty get $(cat .kitchen/kitchen-vagrant/postgres-backend-3-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
+  opensearch_backend_1="$(VBoxManage guestproperty get $(cat .kitchen/kitchen-vagrant/opensearch-backend-1-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
+  opensearch_backend_2="$(VBoxManage guestproperty get $(cat .kitchen/kitchen-vagrant/opensearch-backend-2-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
+  opensearch_backend_3="$(VBoxManage guestproperty get $(cat .kitchen/kitchen-vagrant/opensearch-backend-3-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
+  bastion="$(VBoxManage guestproperty get $(cat .kitchen/kitchen-vagrant/bastion-*/.vagrant/machines/default/virtualbox/id) "/VirtualBox/GuestInfo/Net/0/V4/IP" | awk '{print $2}')"
 fi
 
 # Write IPs to json file
-cat <<-EOF > ./kitchen_nodes.json
+cat <<-EOF > kitchen_nodes.json
   {
     "bastion": ["$bastion"],
     "chef_frontend": ["$chef_frontend"],

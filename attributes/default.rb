@@ -20,7 +20,7 @@ default['automate_ha']['accept_license'] = true
 default['automate_ha']['version'] = 'latest'
 
 default['automate_ha']['username'] = 'automate_ha'
-default['automate_ha']['ssh_key'] = <<-EOV
+default['automate_ha']['ssh_key'] = <<-EOV # For testing purposes only please change, preferably get through your secrets manager
 -----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEAvCM7fJhJCbeKN6lQ7FnAUNuuUEUBotM9wOUE55tAjIIsj4x4
 /SqWW7jUoWNoBmtbmf1e5+KEC0Q6FV/Xwjq4uJ/QX+pJWAgJUEcrwbWUovOhSdRG
