@@ -7,6 +7,7 @@ Use of this cookbook for installing Chef Automate means you agree to the license
 ## Requirements
 
 - Please see <https://docs.chef.io/automate/ha_platform_support/> for server hardware requirements
+- Latest chef-workstation installed
 - For test-kitchen testing locally you'll need about 22GB of local ram for the VM's themselves
 - When using test-kitchen run the `start_kitchen_test.sh` in a bash window to automate the creation of the machines, gathering of the IP's, and writing out kitchen_nodes.json with the IP's for the config.toml file generation
 
@@ -23,8 +24,8 @@ Use of this cookbook for installing Chef Automate means you agree to the license
 | ['automate_ha']['accept_license'] | true | Boolean | Consents to the license agreement at <https://www.chef.io/end-user-license-agreement> |
 | ['automate_ha']['version'] | 'latest' | String | Version of Automate to install. HA requires version 4.3.x or newer |
 | ['automate_ha']['username'] | 'automate_ha' | String | Username for SSH access to nodes in cluster |
-| ['automate_ha']['ssh_key'] | <ssh-key> | String | SSH private key used for access to nodes, this should be replaced by one preferably from a secrets manager, this one is ok for testing with test-kitchen locally |
-| ['automate_ha']['ssh_authorize_key'] | <ssh-pub-key> | String | SSH public key added to the user's authorized_keys file for ssh key based access to nodes |
+| ['automate_ha']['ssh_key'] | see attribute file | String | SSH private key used for access to nodes, this should be replaced by one preferably from a secrets manager, this one is ok for testing with test-kitchen locally
+| ['automate_ha']['ssh_authorize_key'] | see attribute file | String | SSH public key added to the user's authorized_keys file for ssh key based access to nodes |
 | ['automate_ha']['dns_configured'] | false | boolean | Specifies if /etc/hosts needs to be modified if automate and chef dns entries aren't configured and resolvable locally |
 | ['automate_ha']['automate_dns_entry'] | 'chef-automate.example.com' | String | Url used to resolve connection to the automate frontends |
 | ['automate_ha']['infra-server_dns_entry'] | 'chef-server.example.com' | String | Url used to resolve connection to the chef infra server frontends |
@@ -65,5 +66,6 @@ Should only run on the bastion host to:
 
 1. In terminal run script `start_kitchen_test.sh`
 1. To use a different platform found in the kitchen.yml file add the platform as parameter `start_kitchen_test.sh centos-7`
-1. To specify alternate virtualization platform for vagrant like parallels set environment variable `VAGRANT_DEFAULT_PROVIDER` to the name of the provider desired or set `KITCHEN_LOCAL_YAML` to point to another kitchen file that overrides values in the default kitchen.yml file
+1. To specify alternate virtualization platform for vagrant like parallels set environment variable `VAGRANT_DEFAULT_PROVIDER` to the name of the provider desired
+2. To use another kitchen file setup set `KITCHEN_LOCAL_YAML` to point to another kitchen file that overrides values in the default kitchen.yml file
 1. After all servers are up and converged run normal `kitchen` commands as needed

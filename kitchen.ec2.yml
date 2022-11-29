@@ -1,0 +1,51 @@
+---
+driver:
+  name: ec2
+  region: us-west-2
+  subnet_id: subnet-0abb06f4db8abc12e
+  security_group_ids: sg-0ffdfab309d78f9af
+  instance_type: t3a.large
+  retryable_tries: 120
+  associate_public_ip: true
+  ebs_optimized: true
+#  block_device_mappings:
+#    - device_name: /dev/sda
+#      ebs:
+#        volume_type: gp3
+#        volume_size: 150
+#        delete_on_termination: true
+  shared_credentials_profile: saml
+  skip_cost_warning: true
+  tags:
+    Created-By: Test Kitchen
+
+platforms:
+  - name: amazon2
+    driver:
+      tags:
+        Name: <%= ENV['USER'] %>-tk-<%= ENV['KITCHEN_PLATFORM_NAME'] %>
+
+  - name: rhel-7
+    driver:
+      tags:
+        Name: <%= ENV['USER'] %>-tk-<%= ENV['KITCHEN_PLATFORM_NAME'] %>
+
+  - name: rhel-8
+    driver:
+      tags:
+        Name: <%= ENV['USER'] %>-tk-<%= ENV['KITCHEN_PLATFORM_NAME'] %>
+
+  - name: rhel-9
+    driver:
+      tags:
+        Name: <%= ENV['USER'] %>-tk-<%= ENV['KITCHEN_PLATFORM_NAME'] %>
+
+  - name: ubuntu-20.04
+    driver:
+      tags:
+        Name: <%= ENV['USER'] %>-tk-<%= ENV['KITCHEN_PLATFORM_NAME'] %>
+
+  - name: ubuntu-22.04
+    driver:
+      tags:
+        Name: <%= ENV['USER'] %>-tk-<%= ENV['KITCHEN_PLATFORM_NAME'] %>
