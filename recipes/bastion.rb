@@ -69,7 +69,7 @@ execute "chef-automate deploy #{Chef::Config[:file_cache_path]}/config.toml --ai
   notifies :run, 'execute[chef-automate status]', :delayed
 end
 
-execute "chef-automate status" do
+execute 'chef-automate status' do
   cwd Chef::Config[:file_cache_path]
   live_stream true
   user 'root'

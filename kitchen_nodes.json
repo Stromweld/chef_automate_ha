@@ -1,7 +1,7 @@
   {
-    "bastion": [""],
-    "chef_frontend": [""],
-    "automate_frontend": [""],
-    "postgres_backend": ["", "", ""],
-    "opensearch_backend": ["", "", ""]
+    "bastion": ["10.0.0.162"],
+    "chef_frontend": ["10.0.0.165"],
+    "automate_frontend": ["10.0.0.92"],
+    "postgres_backend": ["10.0.0.21", "10.0.0.216", "10.0.0.99"],
+    "opensearch_backend": ["10.0.0.43", "10.0.0.108", "10.0.0.210"]
   }

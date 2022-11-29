@@ -18,6 +18,7 @@ provisioner:
   always_update_cookbooks: true
   chef_license: accept-no-persist
   clean_dokken_sandbox: false
+  data_bags_path: test/fixtures/data_bags
 
 platforms:
   - name: almalinux-8
