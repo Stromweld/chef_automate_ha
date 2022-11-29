@@ -8,12 +8,12 @@ driver:
   retryable_tries: 120
   associate_public_ip: true
   ebs_optimized: true
-#  block_device_mappings:
-#    - device_name: /dev/sda
-#      ebs:
-#        volume_type: gp3
-#        volume_size: 150
-#        delete_on_termination: true
+  block_device_mappings:
+    - device_name: /dev/sda1
+      ebs:
+        volume_type: gp3
+        volume_size: 150
+        delete_on_termination: true
   shared_credentials_profile: saml
   skip_cost_warning: true
   tags:
