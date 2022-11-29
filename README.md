@@ -67,5 +67,5 @@ Should only run on the bastion host to:
 1. In terminal run script `start_kitchen_test.sh`
 1. To use a different platform found in the kitchen.yml file add the platform as parameter `start_kitchen_test.sh centos-7`
 1. To specify alternate virtualization platform for vagrant like parallels set environment variable `VAGRANT_DEFAULT_PROVIDER` to the name of the provider desired
-2. To use another kitchen file setup set `KITCHEN_LOCAL_YAML` to point to another kitchen file that overrides values in the default kitchen.yml file
+1. To use another kitchen file setup set `KITCHEN_LOCAL_YAML` to point to another kitchen file that overrides values in the default kitchen.yml file
 1. After all servers are up and converged run normal `kitchen` commands as needed
