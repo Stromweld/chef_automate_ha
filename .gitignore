@@ -15,6 +15,7 @@ bin/*
 # test kitchen
 .kitchen/
 kitchen.local.yml
+kitchen_nodes.json
 
 # Chef Infra
 Berksfile.lock

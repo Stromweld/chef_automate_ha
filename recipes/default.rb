@@ -32,7 +32,7 @@ if ::File.exist?("/home/#{user_name}/.ssh/authorized_keys")
         options: nil,
       },
     }
-  )
+  ).unique
 end
 
 # Create Authorized Keys entries

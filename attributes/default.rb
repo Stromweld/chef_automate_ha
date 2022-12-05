@@ -75,25 +75,41 @@ default['automate_ha']['initial_config_toml_template'] = {
   automate: {
     config: {
       admin_password: 'Test1234!',
-      fqdn: 'chefautomate.example.com', # Automate Load Balancer FQDN
+      fqdn: lazy { node['automate_ha']['automate_dns_entry'] }, # Automate Load Balancer FQDN
       instance_count: lazy { node['automate_ha']['instance_ips']['automate_frontend'].length.to_s }, # No. of Automate Frontend Machine or VM
       # teams_port: "",
       config_file: 'configs/automate.toml',
+      root_ca: '',
+      public_key: '',
+      private_key: '',
+      custom_certs_enabled: false,
     },
   },
   chef_server: {
     config: {
       instance_count: lazy { node['automate_ha']['instance_ips']['chef_frontend'].length.to_s }, # No. of Chef Server Frontend Machine or VM
+      root_ca: '',
+      public_key: '',
+      private_key: '',
+      custom_certs_enabled: false,
     },
   },
   opensearch: {
     config: {
       instance_count: lazy { node['automate_ha']['instance_ips']['opensearch_backend'].length.to_s }, # No. of OpenSearch DB Backend Machine or VM
+      root_ca: '',
+      public_key: '',
+      private_key: '',
+      custom_certs_enabled: false,
     },
   },
   postgresql: {
     config: {
       instance_count: lazy { node['automate_ha']['instance_ips']['postgres_backend'].length.to_s }, # No. of Postgresql DB Backend Machine or VM
+      root_ca: '',
+      public_key: '',
+      private_key: '',
+      custom_certs_enabled: false,
     },
   },
   existing_infra: {

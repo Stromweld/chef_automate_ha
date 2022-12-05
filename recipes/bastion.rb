@@ -55,17 +55,19 @@ sysctl 'vm.dirty_expire_centisecs' do
   value 20000
 end
 
-template "#{Chef::Config[:file_cache_path]}/config.toml" do
+template "#{Chef::Config[:file_cache_path]}/deploy-config.toml" do
   source 'config.toml.erb'
   variables(var: render_toml(node['automate_ha']['initial_config_toml_template']))
+  notifies :run, 'execute[Run Deployment Command]', :immediately
 end
 
-execute "chef-automate deploy #{Chef::Config[:file_cache_path]}/config.toml --airgap-bundle #{Chef::Config[:file_cache_path]}/automate-#{node['automate_ha']['version']}.aib #{'--accept-terms-and-mlsa' if node['automate_ha']['accept_license']}" do
+execute 'Run Deployment Command' do
+  command "chef-automate deploy #{Chef::Config[:file_cache_path]}/deploy-config.toml --airgap-bundle #{Chef::Config[:file_cache_path]}/automate-#{node['automate_ha']['version']}.aib #{'--accept-terms-and-mlsa' if node['automate_ha']['accept_license']}"
   cwd Chef::Config[:file_cache_path]
   live_stream true
   user 'root'
   timeout 7200
-  not_if { shell_out("#{bin_path}/chef-automate service-versions").exitstatus.eql?(0) }
+  action :nothing
   notifies :run, 'execute[chef-automate status]', :delayed
 end
 
@@ -78,7 +80,7 @@ end
 
 if node['automate_ha']['patch_config_toml_template']
   template "#{Chef::Config[:file_cache_path]}/patch_config.toml" do
-    source 'patch_config.toml.erb'
+    source 'config.toml.erb'
     variables(var: render_toml(node['automate_ha']['patch_config_toml_template']))
     notifies :run, "execute[chef-automate config patch #{Chef::Config[:file_cache_path]}/patch_config.toml]", :immediately
   end
