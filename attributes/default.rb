@@ -21,12 +21,13 @@ secrets = data_bag_item('ssh', 'keys')
 default['automate_ha']['accept_license'] = true
 default['automate_ha']['version'] = 'latest'
 
-default['automate_ha']['username'] = 'automate_ha'
+default['automate_ha']['username'] = 'chef'
 default['automate_ha']['ssh_key'] = lazy { secrets[node['automate_ha']['username']] } # For testing purposes only please change, preferably get through your secrets manager
 default['automate_ha']['ssh_authorize_key'] = {
   automate_ha: {
-    key: 'AAAAB3NzaC1yc2EAAAADAQABAAABAQC8Izt8mEkJt4o3qVDsWcBQ265QRQGi0z3A5QTnm0CMgiyPjHj9KpZbuNShY2gGa1uZ/V7n4oQLRDoVX9fCOri4n9Bf6klYCAlQRyvBtZSi86FJ1EZwiU9O9Abbbc39vkWJBqrX3mfd+txNBN+A1y+6gCjOaaA26jGEMibKVWWKBv22Ja7XWosHwcgXuzO3rsgr+Y3B8cVnQBUQG77iSzW4RAL9vJ1M1ETzCGJ+RAoQ9064AjFnYu0PB/7NcKWH05GdzmEz+xPD4N6qp6OXVPJO0AUwMAVyxPOHIUAUvBixSXIvTKnD1S/L4/aUoGdMF2hXX/96Qcwxfw4CQBzhRAaf', # For testing purposes only please change, preferably get through your secrets manager
+    key: 'AAAAC3NzaC1lZDI1NTE5AAAAIH7peqKl6c5BVpsnFDZi092wMwu9oonUHNz4oEQ4evn2', # For testing purposes only please change, preferably get through your secrets manager
     user: lazy { node['automate_ha']['username'] },
+    keytype: 'ssh-ed25519',
     options: nil,
   },
 }
@@ -42,7 +43,7 @@ default['automate_ha']['instance_ips'] = if kitchen?
                                              chef_frontend: %w(10.0.0.1),
                                              automate_frontend: %w(10.0.0.2),
                                              postgres_backend: %w(10.0.0.3 10.0.0.4 10.0.0.5),
-                                             opensearch_backend: %w(10.0.0.6 10.0.0.7 10.0.0.8),
+                                             opensearch_backend: %w(10.0.0.3 10.0.0.4 10.0.0.5),
                                            }
                                          end
 
@@ -51,9 +52,9 @@ default['automate_ha']['initial_config_toml_template'] = {
   architecture: {
     existing_infra: {
       ssh_user: lazy { node['automate_ha']['username'] },
-      ssh_key_file: "#{Chef::Config[:file_cache_path]}/automate_ha.key",
+      ssh_group_name: lazy { node['automate_ha']['username'] },
+      ssh_key_file: lazy { "#{Chef::Config[:file_cache_path]}/#{node['automate_ha']['username']}.key" },
       ssh_port: '22',
-      sudo_password: '', # Provide Password if needed to run sudo commands.
       secrets_key_file: '/hab/a2_deploy_workspace/secrets.key',
       secrets_store_file: '/hab/a2_deploy_workspace/secrets.json',
       architecture: 'existing_nodes',
@@ -65,6 +66,8 @@ default['automate_ha']['initial_config_toml_template'] = {
   # If backup_config = "object_storage" fill out [object_storage.config] as well
   object_storage: {
     config: {
+      google_service_account_file: '',
+      location: '',
       bucket_name: '',
       access_key: '',
       secret_key: '',
@@ -76,40 +79,63 @@ default['automate_ha']['initial_config_toml_template'] = {
     config: {
       admin_password: 'Test1234!',
       fqdn: lazy { node['automate_ha']['automate_dns_entry'] }, # Automate Load Balancer FQDN
-      instance_count: lazy { node['automate_ha']['instance_ips']['automate_frontend'].length.to_s }, # No. of Automate Frontend Machine or VM
-      # teams_port: "",
+      # root_ca: 'automate_lb_root_ca_contents',
+      instance_count: lazy { node['automate_ha']['instance_ips']['automate_frontend'].length.to_s }, # No. of Automate Frontend Machines or VMs
+      # teams_port: '',
       config_file: 'configs/automate.toml',
-      root_ca: '',
-      public_key: '',
-      private_key: '',
-      custom_certs_enabled: false,
+      enable_custom_certs: false,
+      # private_key: 'private_key_contents',
+      # public_key: 'public_key_contents',
+      # certs_by_ip: {
+        # ip: '',
+        # private_key: 'private_key_contents',
+        # public_key: 'public_key_contents',
+      # },
     },
   },
-  chef_server: {
+   chef_server: {
     config: {
-      instance_count: lazy { node['automate_ha']['instance_ips']['chef_frontend'].length.to_s }, # No. of Chef Server Frontend Machine or VM
-      root_ca: '',
-      public_key: '',
-      private_key: '',
-      custom_certs_enabled: false,
+      fqdn: lazy { node['automate_ha']['infra-server_dns_entry'] }, # Chefserver Load Balancer FQDN
+      # lb_root_ca: 'chef_server_lb_root_ca_contents',
+      instance_count: lazy { node['automate_ha']['instance_ips']['chef_frontend'].length.to_s }, # No. of Chef Server Frontend Machines or VMs
+      enable_custom_certs: false,
+      # private_key: 'private_key_contents',
+      # public_key: 'public_key_contents',
+      # certs_by_ip: {
+        # ip: '',
+        # private_key: 'private_key_contents',
+        # public_key: 'public_key_contents',
+      # },
     },
-  },
+   },
   opensearch: {
     config: {
-      instance_count: lazy { node['automate_ha']['instance_ips']['opensearch_backend'].length.to_s }, # No. of OpenSearch DB Backend Machine or VM
-      root_ca: '',
-      public_key: '',
-      private_key: '',
-      custom_certs_enabled: false,
+      instance_count: lazy { node['automate_ha']['instance_ips']['opensearch_backend'].length.to_s }, # No. of OpenSearch DB Backend Machines or VMs
+      enable_custom_certs: false,
+      # root_ca: 'opensearch_root_ca_contents',
+      # admin_key: 'admin_private_key_contents',
+      # admin_cert: 'admin_public_key_contents',
+      # private_key: 'private_key_contents',
+      # public_key: 'public_key_contents',
+      # certs_by_ip: {
+        # ip: '',
+        # private_key: 'private_key_contents',
+        # public_key: 'public_key_contents',
+      # },
     },
   },
   postgresql: {
     config: {
-      instance_count: lazy { node['automate_ha']['instance_ips']['postgres_backend'].length.to_s }, # No. of Postgresql DB Backend Machine or VM
-      root_ca: '',
-      public_key: '',
-      private_key: '',
-      custom_certs_enabled: false,
+      instance_count: lazy { node['automate_ha']['instance_ips']['postgres_backend'].length.to_s }, # No. of Postgresql DB Backend Machines or VMs
+      enable_custom_certs: false,
+      # root_ca: 'postgresql_root_ca_contents',
+      # private_key: 'private_key_contents',
+      # public_key: 'public_key_contents',
+      # certs_by_ip: {
+        # ip: '',
+        # private_key: 'private_key_contents',
+        # public_key: 'public_key_contents',
+      # },
     },
   },
   existing_infra: {
@@ -118,6 +144,31 @@ default['automate_ha']['initial_config_toml_template'] = {
       chef_server_private_ips: lazy { node['automate_ha']['instance_ips']['chef_frontend'] },
       opensearch_private_ips: lazy { node['automate_ha']['instance_ips']['postgres_backend'] },
       postgresql_private_ips: lazy { node['automate_ha']['instance_ips']['opensearch_backend'] },
+    },
+  },
+  external: {
+    database: {
+      type: '', # eg type = "aws" or "self-managed"
+      postgresql: {
+        instance_url: '',
+        superuser_username: '',
+        superuser_password: '',
+        dbuser_username: '',
+        dbuser_password: '',
+        postgresql_root_cert: '',
+      },
+      open_search: {
+        opensearch_domain_name: '',
+        opensearch_domain_url: '',
+        opensearch_username: '',
+        opensearch_user_password: '',
+        opensearch_root_cert: '',
+        aws: {
+          aws_os_snapshot_role_arn: '',
+          os_snapshot_user_access_key_id: '',
+          os_snapshot_user_access_key_secret: '',
+        },
+      },
     },
   },
 }

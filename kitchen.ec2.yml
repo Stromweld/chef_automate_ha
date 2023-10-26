@@ -12,7 +12,7 @@ driver:
     - device_name: /dev/sda1
       ebs:
         volume_type: gp3
-        volume_size: 150
+        volume_size: 200
         delete_on_termination: true
   shared_credentials_profile: saml
   skip_cost_warning: true
@@ -23,29 +23,29 @@ platforms:
   - name: amazon2
     driver:
       tags:
-        Name: <%= ENV['USER'] %>-tk-<%= ENV['KITCHEN_PLATFORM_NAME'] %>
+        Name: <%= ENV['USER'] %>-tk-amazon2
 
   - name: rhel-7
     driver:
       tags:
-        Name: <%= ENV['USER'] %>-tk-<%= ENV['KITCHEN_PLATFORM_NAME'] %>
+        Name: <%= ENV['USER'] %>-tk-rhel-7
 
   - name: rhel-8
     driver:
       tags:
-        Name: <%= ENV['USER'] %>-tk-<%= ENV['KITCHEN_PLATFORM_NAME'] %>
+        Name: <%= ENV['USER'] %>-tk-rhel-8
 
   - name: rhel-9
     driver:
       tags:
-        Name: <%= ENV['USER'] %>-tk-<%= ENV['KITCHEN_PLATFORM_NAME'] %>
+        Name: <%= ENV['USER'] %>-tk-rhel-9
 
   - name: ubuntu-20.04
     driver:
       tags:
-        Name: <%= ENV['USER'] %>-tk-<%= ENV['KITCHEN_PLATFORM_NAME'] %>
+        Name: <%= ENV['USER'] %>-tk-ubuntu-20.04
 
   - name: ubuntu-22.04
     driver:
       tags:
-        Name: <%= ENV['USER'] %>-tk-<%= ENV['KITCHEN_PLATFORM_NAME'] %>
+        Name: <%= ENV['USER'] %>-tk-ubuntu-22.04

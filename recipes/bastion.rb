@@ -17,7 +17,7 @@
 # limitations under the License.
 
 # Create automate_ha user ssh private key in root's .ssh folder
-file "#{Chef::Config[:file_cache_path]}/automate_ha.key" do
+file "#{Chef::Config[:file_cache_path]}/#{node['automate_ha']['username']}.key" do
   content node['automate_ha']['ssh_key']
   owner 'root'
   group 'root'
@@ -62,12 +62,12 @@ template "#{Chef::Config[:file_cache_path]}/deploy-config.toml" do
 end
 
 execute 'Run Deployment Command' do
-  command "chef-automate deploy #{Chef::Config[:file_cache_path]}/deploy-config.toml --airgap-bundle #{Chef::Config[:file_cache_path]}/automate-#{node['automate_ha']['version']}.aib #{'--accept-terms-and-mlsa' if node['automate_ha']['accept_license']}"
+  command "chef-automate deploy #{Chef::Config[:file_cache_path]}/deploy-config.toml --skip-verify --airgap-bundle #{Chef::Config[:file_cache_path]}/automate-#{node['automate_ha']['version']}.aib #{'--accept-terms-and-mlsa' if node['automate_ha']['accept_license']}"
   cwd Chef::Config[:file_cache_path]
   live_stream true
   user 'root'
   timeout 7200
-  action :nothing
+  not_if 'chef-automate status'
   notifies :run, 'execute[chef-automate status]', :delayed
 end
 
