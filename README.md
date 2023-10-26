@@ -11,7 +11,7 @@ Use of this cookbook for installing Chef Automate means you agree to the license
 - For test-kitchen testing locally you'll need about 48GB of local ram for the VM's themselves
 - When using test-kitchen run the `start_kitchen_test.sh` in a bash window to automate the creation of the machines, gathering of the IP's, and writing out kitchen_nodes.json with the IP's for the config.toml file generation
 - For test-kitchen to run in AWS use `saml2aws login` and `export KITCHEN_LOCAL_YAML="kitchen.ec2.yml"` before the `start_kitchen_test.sh` script
-  - kitchen.ec2.yml is configured to use a subnet and security group pre-built in us-west-2 for aws account 'chef-success-aws'
+   - kitchen.ec2.yml is configured to use a subnet and security group pre-built in us-west-2 for aws account 'chef-success-aws'
 
 ### Platforms
 
