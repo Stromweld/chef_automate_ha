@@ -1,8 +1,11 @@
 ---
 driver:
   name: vagrant
+  # provider: parallels
   box_auto_update: true
   box_auto_prune: true
+  network:
+    - [ "private_network", type: dhcp ]
 
 provisioner:
   name: chef_infra
@@ -32,41 +35,28 @@ platforms:
   - name: ubuntu-22.04
 
 suites:
-  - name: chef-frontend-1
+  - name: frontend-1
     driver:
       customize:
-        memory: 2196
-  - name: automate-frontend-1
+        memory: 8192
+  - name: frontend-2
     driver:
       customize:
-        memory: 2196
-  - name: postgres-backend-1
+        memory: 8192
+  - name: backend-1
     driver:
       customize:
-        memory: 3072
-  - name: postgres-backend-2
+        memory: 8192
+  - name: backend-2
     driver:
       customize:
-        memory: 3072
-  - name: postgres-backend-3
+        memory: 8192
+  - name: backend-3
     driver:
       customize:
-        memory: 3072
-  - name: opensearch-backend-1
-    driver:
-      customize:
-        memory: 2196
-  - name: opensearch-backend-2
-    driver:
-      customize:
-        memory: 2196
-  - name: opensearch-backend-3
-    driver:
-      customize:
-        memory: 2196
+        memory: 8192
   - name: bastion
     driver:
       customize:
-        memory: 2196
-        cpus: 4
+        memory: 8196
     named_run_list: bastion

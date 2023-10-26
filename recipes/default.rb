@@ -21,20 +21,6 @@ user_name = node['automate_ha']['username']
 
 user user_name
 
-# Gather any existing authorized_keys entries if they exist
-if ::File.exist?("/home/#{user_name}/.ssh/authorized_keys")
-  pub_key = ::File.read("/home/#{user_name}/.ssh/authorized_keys").split.max_by(&:length)
-  node.force_override['automate_ha']['ssh_authorize_key'] = node['automate_ha']['ssh_authorize_key'].merge(
-    {
-      "#{user_name}" => {
-        key: pub_key,
-        user: user_name,
-        options: nil,
-      },
-    }
-  ).unique
-end
-
 # Create Authorized Keys entries
 node['automate_ha']['ssh_authorize_key']&.each do |name, hash|
   ssh_authorize_key name do
@@ -69,6 +55,6 @@ end
 
 # Set SElinux to permissive mode
 selinux_state 'default' do
-  # automatic_reboot true
+  automatic_reboot true
   action :permissive
 end
