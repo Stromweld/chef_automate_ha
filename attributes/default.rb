@@ -17,14 +17,16 @@
 # limitations under the License.
 
 secrets = data_bag_item('ssh', 'keys')
+automate_license = data_bag_item('automate', 'automate')['license']
 
 default['automate_ha']['accept_license'] = true
-default['automate_ha']['version'] = 'latest'
+default['automate_ha']['cli_version'] = 'latest'
+default['automate_ha']['automate_version'] = lazy { node['automate_ha']['cli_version'] }
 
 default['automate_ha']['username'] = 'chef'
 default['automate_ha']['ssh_key'] = lazy { secrets[node['automate_ha']['username']] } # For testing purposes only please change, preferably get through your secrets manager
 default['automate_ha']['ssh_authorize_key'] = {
-  automate_ha: {
+  chef: {
     key: 'AAAAC3NzaC1lZDI1NTE5AAAAIH7peqKl6c5BVpsnFDZi092wMwu9oonUHNz4oEQ4evn2', # For testing purposes only please change, preferably get through your secrets manager
     user: lazy { node['automate_ha']['username'] },
     keytype: 'ssh-ed25519',
@@ -87,13 +89,13 @@ default['automate_ha']['initial_config_toml_template'] = {
       # private_key: 'private_key_contents',
       # public_key: 'public_key_contents',
       # certs_by_ip: {
-        # ip: '',
-        # private_key: 'private_key_contents',
-        # public_key: 'public_key_contents',
+      # ip: '',
+      # private_key: 'private_key_contents',
+      # public_key: 'public_key_contents',
       # },
     },
   },
-   chef_server: {
+  chef_server: {
     config: {
       fqdn: lazy { node['automate_ha']['infra-server_dns_entry'] }, # Chefserver Load Balancer FQDN
       # lb_root_ca: 'chef_server_lb_root_ca_contents',
@@ -102,12 +104,12 @@ default['automate_ha']['initial_config_toml_template'] = {
       # private_key: 'private_key_contents',
       # public_key: 'public_key_contents',
       # certs_by_ip: {
-        # ip: '',
-        # private_key: 'private_key_contents',
-        # public_key: 'public_key_contents',
+      # ip: '',
+      # private_key: 'private_key_contents',
+      # public_key: 'public_key_contents',
       # },
     },
-   },
+  },
   opensearch: {
     config: {
       instance_count: lazy { node['automate_ha']['instance_ips']['opensearch_backend'].length.to_s }, # No. of OpenSearch DB Backend Machines or VMs
@@ -118,9 +120,9 @@ default['automate_ha']['initial_config_toml_template'] = {
       # private_key: 'private_key_contents',
       # public_key: 'public_key_contents',
       # certs_by_ip: {
-        # ip: '',
-        # private_key: 'private_key_contents',
-        # public_key: 'public_key_contents',
+      # ip: '',
+      # private_key: 'private_key_contents',
+      # public_key: 'public_key_contents',
       # },
     },
   },
@@ -132,9 +134,9 @@ default['automate_ha']['initial_config_toml_template'] = {
       # private_key: 'private_key_contents',
       # public_key: 'public_key_contents',
       # certs_by_ip: {
-        # ip: '',
-        # private_key: 'private_key_contents',
-        # public_key: 'public_key_contents',
+      # ip: '',
+      # private_key: 'private_key_contents',
+      # public_key: 'public_key_contents',
       # },
     },
   },
@@ -173,5 +175,34 @@ default['automate_ha']['initial_config_toml_template'] = {
   },
 }
 
-# Used for patch changes to the system
-default['automate_ha']['patch_config_toml_template'] = nil
+# Used for patch changes to automate ha
+default['automate_ha']['patch_config_toml_template'] = {
+  global: {
+    v1: {
+      session_settings: {
+        enable_idle_timeout: false,
+        # idle_timeout_minutes: 30,
+      },
+      # log: {
+      #   redirect_sys_log: true,
+      #   redirect_log_file_path: "/var/log/automate",
+      # },
+    },
+  },
+  erchef: {
+    v1: {
+      sys: {
+        api: {
+          cbv_cache_enabled: true,
+        },
+      },
+    },
+  },
+  license_control: {
+    v1: {
+      svc: {
+        license: automate_license
+      },
+    },
+  },
+}

@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+package %w(nano net-tools)
+
 # Create common user for all nodes
 user_name = node['automate_ha']['username']
 

@@ -11,7 +11,7 @@ default_source :supermarket
 
 # run_list: chef-client will run these recipes in the order specified.
 run_list 'automate_ha::default'
-named_run_list :bastion, %w(automate_ha::default automate_ha::bastion)
+named_run_list :bastion, 'automate_ha::bastion'
 
 # Specify a custom source for a single cookbook:
 cookbook 'automate_ha', path: '.'

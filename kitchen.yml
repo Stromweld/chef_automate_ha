@@ -19,6 +19,7 @@ provisioner:
   always_update_cookbooks: true
   chef_license: accept-no-persist
   data_bags_path: test/fixtures/data_bags
+  encrypted_data_bag_secret_key_path: ~/.chef/encrypted_data_bag_secret
 
 verifier:
   name: inspec
@@ -60,3 +61,13 @@ suites:
       customize:
         memory: 8196
     named_run_list: bastion
+  - name: fe-auto-1
+  - name: fe-auto-2
+  - name: fe-chef-1
+  - name: fe-chef-2
+  - name: be-pg-1
+  - name: be-pg-2
+  - name: be-pg-3
+  - name: be-os-1
+  - name: be-os-2
+  - name: be-os-3

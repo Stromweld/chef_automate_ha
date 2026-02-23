@@ -2,8 +2,8 @@
 driver:
   name: ec2
   region: us-west-2
-  subnet_id: subnet-0abb06f4db8abc12e
-  security_group_ids: sg-0ffdfab309d78f9af
+  subnet_id: subnet-05b7ff4da392a1e72
+  security_group_ids: sg-0543d3f348c0547bf
   instance_type: t3a.large
   retryable_tries: 120
   associate_public_ip: true
@@ -20,10 +20,15 @@ driver:
     Created-By: Test Kitchen
 
 platforms:
-  - name: amazon2
+  - name: amazon-2
     driver:
       tags:
-        Name: <%= ENV['USER'] %>-tk-amazon2
+        Name: <%= ENV['USER'] %>-tk-amazon-2
+
+  - name: amazonlinux-2023
+    driver:
+      tags:
+        Name: <%= ENV['USER'] %>-tk-amazon-2023
 
   - name: rhel-7
     driver:
@@ -40,12 +45,34 @@ platforms:
       tags:
         Name: <%= ENV['USER'] %>-tk-rhel-9
 
-  - name: ubuntu-20.04
-    driver:
-      tags:
-        Name: <%= ENV['USER'] %>-tk-ubuntu-20.04
-
   - name: ubuntu-22.04
     driver:
       tags:
         Name: <%= ENV['USER'] %>-tk-ubuntu-22.04
+
+  - name: ubuntu-24.04
+    driver:
+      tags:
+        Name: <%= ENV['USER'] %>-tk-ubuntu-24.04
+
+suites:
+  # 5 node cluster suites
+  - name: frontend-1
+  - name: frontend-2
+  - name: backend-1
+  - name: backend-2
+  - name: backend-3
+  # used in both 5 node and 10 node cluster
+  - name: bastion
+    named_run_list: bastion
+  # 10 node cluster suites
+  - name: fe-auto-1
+  - name: fe-auto-2
+  - name: fe-chef-1
+  - name: fe-chef-2
+  - name: be-pg-1
+  - name: be-pg-2
+  - name: be-pg-3
+  - name: be-os-1
+  - name: be-os-2
+  - name: be-os-3

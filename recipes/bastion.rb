@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include_recipe '::default'
+
 # Create automate_ha user ssh private key in root's .ssh folder
 file "#{Chef::Config[:file_cache_path]}/#{node['automate_ha']['username']}.key" do
   content node['automate_ha']['ssh_key']
@@ -30,11 +32,11 @@ bin_path = value_for_platform_family(
   default: '/usr/bin'
 )
 
-remote_file "#{Chef::Config[:file_cache_path]}/chef-automate-#{node['automate_ha']['version']}.zip" do
-  source "https://packages.chef.io/files/current/#{node['automate_ha']['version']}/chef-automate-cli/chef-automate_linux_amd64.zip"
+remote_file "#{Chef::Config[:file_cache_path]}/chef-automate-#{node['automate_ha']['cli_version']}.zip" do
+  source "https://packages.chef.io/files/current/#{node['automate_ha']['cli_version']}/chef-automate-cli/chef-automate_linux_amd64.zip"
 end
 
-archive_file "#{Chef::Config[:file_cache_path]}/chef-automate-#{node['automate_ha']['version']}.zip" do
+archive_file "#{Chef::Config[:file_cache_path]}/chef-automate-#{node['automate_ha']['cli_version']}.zip" do
   destination '/usr/local/chef-automate'
   mode '0755'
 end
@@ -43,8 +45,8 @@ link "#{bin_path}/chef-automate" do
   to '/usr/local/chef-automate/chef-automate'
 end
 
-remote_file "#{Chef::Config[:file_cache_path]}/automate-#{node['automate_ha']['version']}.aib" do
-  source "https://packages.chef.io/airgap_bundle/current/automate/#{node['automate_ha']['version']}.aib"
+remote_file "#{Chef::Config[:file_cache_path]}/automate-#{node['automate_ha']['automate_version']}.aib" do
+  source "https://packages.chef.io/airgap_bundle/current/automate/#{node['automate_ha']['automate_version']}.aib"
 end
 
 sysctl 'vm.max_map_count' do
@@ -62,7 +64,7 @@ template "#{Chef::Config[:file_cache_path]}/deploy-config.toml" do
 end
 
 execute 'Run Deployment Command' do
-  command "chef-automate deploy #{Chef::Config[:file_cache_path]}/deploy-config.toml --skip-verify --airgap-bundle #{Chef::Config[:file_cache_path]}/automate-#{node['automate_ha']['version']}.aib #{'--accept-terms-and-mlsa' if node['automate_ha']['accept_license']}"
+  command "chef-automate deploy #{Chef::Config[:file_cache_path]}/deploy-config.toml --skip-verify --airgap-bundle #{Chef::Config[:file_cache_path]}/automate-#{node['automate_ha']['automate_version']}.aib #{'--accept-terms-and-mlsa' if node['automate_ha']['accept_license']}"
   cwd Chef::Config[:file_cache_path]
   live_stream true
   user 'root'
@@ -82,12 +84,17 @@ if node['automate_ha']['patch_config_toml_template']
   template "#{Chef::Config[:file_cache_path]}/patch_config.toml" do
     source 'config.toml.erb'
     variables(var: render_toml(node['automate_ha']['patch_config_toml_template']))
-    notifies :run, "execute[chef-automate config patch #{Chef::Config[:file_cache_path]}/patch_config.toml]", :immediately
+    notifies :run, "execute[chef-automate config patch -c #{Chef::Config[:file_cache_path]}/patch_config.toml]", :immediately
+    notifies :run, "execute[chef-automate config patch -a #{Chef::Config[:file_cache_path]}/patch_config.toml]", :immediately
+    notifies :run, "execute[chef-automate config patch -o #{Chef::Config[:file_cache_path]}/patch_config.toml]", :immediately
+    notifies :run, "execute[chef-automate config patch -p #{Chef::Config[:file_cache_path]}/patch_config.toml]", :immediately
   end
 
-  execute "chef-automate config patch #{Chef::Config[:file_cache_path]}/patch_config.toml" do
-    cwd Chef::Config[:file_cache_path]
-    live_stream true
-    action :nothing
+  %w(-c -a -o -p).each do |flag|
+    execute "chef-automate config patch #{flag} #{Chef::Config[:file_cache_path]}/patch_config.toml" do
+      cwd Chef::Config[:file_cache_path]
+      live_stream true
+      action :nothing
+    end
   end
 end
